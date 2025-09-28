@@ -1,0 +1,30 @@
+#include <ESP8266WiFi.h>
+
+const char* ssid = "SEU_WIFI";
+const char* password = "SUA_SENHA";
+const char* host = "ENDERECO_DO_SEU_SERVIDOR";
+const int httpPort = 80;
+
+void setup() {
+  Serial.begin(9600);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+  }
+}
+
+void loop() {
+  if (Serial.available()) {
+    String valorSensorStr = Serial.readStringUntil('\n');
+    valorSensorStr.trim();
+    
+    WiFiClient client;
+    if (client.connect(host, httpPort)) {
+      String url = "/caminho_do_seu_script?valor=" + valorSensorStr;
+      client.print(String("GET ") + url + " HTTP/1.1\r\n" +
+                   "Host: " + host + "\r\n" +
+                   "Connection: close\r\n\r\n");
+      client.stop();
+    }
+  }
+}
