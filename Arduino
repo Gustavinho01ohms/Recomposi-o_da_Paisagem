@@ -1,0 +1,11 @@
+const int pinoSensor = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int valorSensor = analogRead(pinoSensor);
+  Serial.println(valorSensor);
+  delay(1000);
+}
